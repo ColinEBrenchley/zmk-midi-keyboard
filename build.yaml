@@ -1,0 +1,6 @@
+# This file generates the GitHub Actions matrix
+# For the ZMK MIDI Keyboard using nice_nano_v2 controller
+
+---
+include:
+  - board: nice_nano_v2
