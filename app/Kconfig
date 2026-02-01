@@ -1,0 +1,92 @@
+menuconfig ZMK_USB_MIDI
+    bool "USB MIDI Output Support"
+    depends on USB_DEVICE_STACK
+    help
+      Enable USB MIDI device support for ZMK. This allows the keyboard
+      to send MIDI messages when keys are pressed, in addition to or
+      instead of standard HID keyboard output.
+
+if ZMK_USB_MIDI
+
+config ZMK_USB_MIDI_INIT_PRIORITY
+    int "USB MIDI initialization priority"
+    default 50
+    help
+      Initialization priority level for the USB MIDI subsystem.
+      Should be > CONFIG_USB_INIT_PRIORITY to ensure USB device
+      stack is initialized first.
+
+config ZMK_USB_MIDI_DEFAULT_CHANNEL
+    int "Default MIDI channel"
+    range 1 16
+    default 1
+    help
+      Default MIDI channel (1-16) for keyboard output.
+      Can be changed at runtime.
+
+config ZMK_USB_MIDI_DEFAULT_VELOCITY
+    int "Default MIDI velocity"
+    range 0 127
+    default 64
+    help
+      Default velocity value for MIDI note-on messages.
+      This affects the loudness of played notes.
+      Can be changed at runtime.
+
+config ZMK_USB_MIDI_THREAD_PRIORITY
+    int "USB MIDI thread priority"
+    default 10
+    help
+      Thread priority for USB MIDI operations. Lower numbers = higher priority.
+
+config ZMK_USB_MIDI_THREAD_STACK_SIZE
+    int "USB MIDI thread stack size"
+    default 2048
+    help
+      Stack size in bytes for USB MIDI processing thread.
+
+config ZMK_USB_MIDI_ENDPOINT_SIZE
+    int "USB MIDI endpoint packet size"
+    range 8 64
+    default 64
+    help
+      USB packet size for MIDI endpoints. Must match hardware capabilities.
+      Typical value is 64 bytes for full-speed USB.
+
+config ZMK_USB_MIDI_COMPOSITE_DEVICE
+    bool "Enable composite USB device (MIDI + HID)"
+    default y
+    help
+      If enabled, the device will function as both a USB MIDI device
+      and a USB HID keyboard simultaneously. This allows sending MIDI
+      messages while still providing normal keyboard input to the host.
+      
+      If disabled, the device will only provide MIDI output (HID disabled).
+
+config ZMK_USB_MIDI_SHELL
+    bool "Enable USB MIDI shell commands"
+    depends on SHELL
+    default n
+    help
+      If enabled, adds shell commands for testing and configuring MIDI:
+      - midi channel [1-16]     : Get/set MIDI channel
+      - midi velocity [0-127]   : Get/set note velocity
+      - midi enable [y/n]       : Enable/disable MIDI output
+      - midi test <note>        : Send test note
+
+config ZMK_USB_MIDI_DEBUG
+    bool "Enable USB MIDI debug logging"
+    depends on LOG
+    default n
+    help
+      Enable detailed debug logging for USB MIDI operations.
+      Useful for troubleshooting but may impact performance.
+
+config ZMK_USB_MIDI_STATS
+    bool "Enable USB MIDI statistics"
+    default n
+    help
+      Track and report USB MIDI statistics (messages sent, timing, etc.).
+      Can be queried via shell if enabled.
+
+endif # ZMK_USB_MIDI
