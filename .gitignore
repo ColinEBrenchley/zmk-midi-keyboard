@@ -5,3 +5,10 @@ build/
 *~
 .vscode/
 .idea/
+
+# Zephyr Build specific
+.zmk/
+zephyr/
+zmk/
+modules/
+optional/
