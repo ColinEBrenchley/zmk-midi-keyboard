@@ -1,4 +1,5 @@
 manifest:
+  version: "1.2"
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
@@ -9,3 +10,15 @@ manifest:
       import: app/west.yml
   self:
     path: config
+  
+  # Note: This manifest creates a workspace where:
+  # - ZMK firmware is in ../zmk/
+  # - Your keyboard config is in ../
+  # - App-level code is in ../app/
+  #
+  # The app/ directory contains:
+  # - Embedded USB MIDI implementation (no external dependencies)
+  # - Keymap definitions (midi_keyboard.keymap)
+  # - Configuration (midi_keyboard.conf, Kconfig, CMakeLists.txt)
+  #
+  # To build: cd .. && west build -b <board> --pristine always

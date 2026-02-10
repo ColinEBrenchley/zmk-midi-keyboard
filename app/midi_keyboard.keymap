@@ -1,0 +1,196 @@
+/*
+ * Example ZMK Keymap with USB MIDI Support
+ *
+ * This example shows how to configure a ZMK keyboard with USB MIDI output.
+ * Pressing keys will send corresponding MIDI note messages.
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/midi.h>
+
+/ {
+    /*
+     * MIDI Layer: 4x4 grid playing a chromatic scale
+     * 
+     * Octave 4:  C4  D4  E4  F4
+     *            G4  A4  B4  C5
+     *
+     * Octave 5:  C5  D5  E5  F5
+     *            G5  A5  B5  C6
+     *
+     * MIDI Note numbers:
+     * C4=60, D4=62, E4=64, F4=65, G4=67, A4=69, B4=71, C5=72
+     * C5=72, D5=74, E5=76, F5=77, G5=79, A5=81, B5=83, C6=84
+     */
+
+    behaviors {
+        /*
+         * Define a behavior for MIDI notes
+         * When pressed: sends Note On
+         * When released: sends Note Off
+         */
+        midi_note: behavior_midi_note {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MIDI_NOTE";
+            #binding-cells = <2>;
+            tapping_term_ms = <0>;
+            quick_tap_ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&midi_note>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        /* Layer 0: MIDI - Chromatic scale layout */
+        midi_layer {
+            label = "MIDI";
+            bindings = <
+                &midi_note C4   &midi_note D4   &midi_note E4   &midi_note F4
+                &midi_note G4   &midi_note A4   &midi_note B4   &midi_note C5
+                &midi_note C5   &midi_note D5   &midi_note E5   &midi_note F5
+                &midi_note G5   &midi_note A5   &midi_note B5   &midi_note C6
+            >;
+        };
+
+        /* Layer 1: MIDI - Drum pads on lower octave */
+        drum_layer {
+            label = "DRUMS";
+            bindings = <
+                &midi_note C1   &midi_note D1   &midi_note E1   &midi_note F1
+                &midi_note G1   &midi_note A1   &midi_note B1   &midi_note C2
+                &midi_note C2   &midi_note D2   &midi_note E2   &midi_note F2
+                &midi_note G2   &midi_note A2   &midi_note B2   &midi_note C3
+            >;
+        };
+
+        /* Layer 2: MIDI - Extended range with sharps */
+        extended_layer {
+            label = "EXTENDED";
+            bindings = <
+                &midi_note C3   &midi_note CS3  &midi_note D3   &midi_note DS3
+                &midi_note E3   &midi_note F3   &midi_note FS3  &midi_note G3
+                &midi_note GS3  &midi_note A3   &midi_note AS3  &midi_note B3
+                &midi_note C4   &midi_note CS4  &midi_note D4   &midi_note DS4
+            >;
+        };
+    };
+
+    /*
+     * MIDI Configuration Section
+     * Uncomment to override defaults
+     */
+
+    /*
+    midi_config {
+        compatible = "zmk,midi-config";
+        default_channel = <1>;      // MIDI channel 1-16
+        default_velocity = <100>;   // Default note velocity
+        enabled = <1>;              // 1 = enabled, 0 = disabled
+    };
+    */
+};
+
+/*
+ * ZMK MIDI Keycode Reference
+ * =============================
+ *
+ * Natural Notes (C through B):
+ * 
+ * Octave 0:
+ *   C0 = 0   D0 = 2   E0 = 4   F0 = 5
+ *   G0 = 7   A0 = 9   B0 = 11
+ *
+ * Octave 1:
+ *   C1 = 12  D1 = 14  E1 = 16  F1 = 17
+ *   G1 = 19  A1 = 21  B1 = 23
+ *
+ * Octave 2:
+ *   C2 = 24  D2 = 26  E2 = 28  F2 = 29
+ *   G2 = 31  A2 = 33  B2 = 35
+ *
+ * Octave 3:
+ *   C3 = 36  D3 = 38  E3 = 40  F3 = 41
+ *   G3 = 43  A3 = 45  B3 = 47
+ *
+ * Octave 4 (Middle octave):
+ *   C4 = 60  D4 = 62  E4 = 64  F4 = 65
+ *   G4 = 67  A4 = 69  B4 = 71
+ *
+ * Octave 5:
+ *   C5 = 72  D5 = 74  E5 = 76  F5 = 77
+ *   G5 = 79  A5 = 81  B5 = 83
+ *
+ * Octave 6:
+ *   C6 = 84  D6 = 86  E6 = 88  F6 = 89
+ *   G6 = 91  A6 = 93  B6 = 95
+ *
+ * Octave 7:
+ *   C7 = 96  D7 = 98  E7 = 100 F7 = 101
+ *   G7 = 103 A7 = 105 B7 = 107
+ *
+ * Octave 8:
+ *   C8 = 108
+ *
+ * Sharps/Flats (add 1 to natural note):
+ *   CS0 = 1   DS0 = 3   FS0 = 6   GS0 = 8   AS0 = 10
+ *   CS1 = 13  DS1 = 15  FS1 = 18  GS1 = 20  AS1 = 22
+ *   CS2 = 25  DS2 = 27  FS2 = 30  GS2 = 32  AS2 = 34
+ *   CS3 = 37  DS3 = 39  FS3 = 42  GS3 = 44  AS3 = 46
+ *   CS4 = 61  DS4 = 63  FS4 = 66  GS4 = 68  AS4 = 70
+ *   CS5 = 73  DS5 = 75  FS5 = 78  GS5 = 80  AS5 = 82
+ *   CS6 = 85  DS6 = 87  FS6 = 90  GS6 = 92  AS6 = 94
+ *   CS7 = 97  DS7 = 99  FS7 = 102 GS7 = 104 AS7 = 106
+ *
+ * Special Values:
+ *   MIDI_NOTE_OFF = 0     (stops all notes)
+ *   MIDI_CC_ALL_OFF = 123 (control change: all notes off)
+ *
+ *
+ * Common Scales
+ * ===============
+ *
+ * C Major (Ionian):
+ * C D E F G A B C = 0 2 4 5 7 9 11 12
+ * Example starting at C4: 60, 62, 64, 65, 67, 69, 71, 72
+ *
+ * A Natural Minor (Aeolian):
+ * A B C D E F G A = 9 11 12 14 16 17 19 21
+ * Example starting at A3: 45, 47, 48, 50, 52, 53, 55, 57
+ *
+ * Pentatonic Minor:
+ * C EB F G BB C = 0 3 5 7 10 12
+ * Example starting at C4: 60, 63, 65, 67, 70, 72
+ *
+ * Blues Scale:
+ * C EB F GB B C = 0 3 5 6 10 12
+ * Example starting at C4: 60, 63, 65, 66, 70, 72
+ *
+ * Whole Tone:
+ * C D E FS GS AS C = 0 2 4 6 8 10 12
+ * Example starting at C4: 60, 62, 64, 66, 68, 70, 72
+ *
+ *
+ * MIDI Channels
+ * ===============
+ *
+ * Can be configured per-keymap section or via shell command:
+ * - uart:~$ midi channel 1   (sets to channel 1)
+ * - uart:~$ midi channel 16  (sets to channel 16)
+ *
+ * Default is channel 1
+ *
+ *
+ * Velocity Control
+ * ==================
+ *
+ * Default velocity (volume) can be set via shell:
+ * - uart:~$ midi velocity 127 (full volume)
+ * - uart:~$ midi velocity 64  (medium volume, default)
+ * - uart:~$ midi velocity 1   (minimum volume)
+ *
+ * Can also be defined per-key binding for dynamic velocity
+ * (e.g., based on how long key is held)
+ */

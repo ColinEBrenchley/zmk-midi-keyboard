@@ -1,0 +1,58 @@
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        /* 
+         * Layer 0: MIDI - Chromatic scale (Octave 4-5)
+         * 
+         * Natural notes across two octaves:
+         * Row 1: C4  D4  E4  F4
+         * Row 2: G4  A4  B4  C5
+         * Row 3: C5  D5  E5  F5
+         * Row 4: G5  A5  B5  C6
+         */
+        midi_layer {
+            label = "MIDI";
+            bindings = <
+                &midi_note C4   &midi_note D4   &midi_note E4   &midi_note F4
+                &midi_note G4   &midi_note A4   &midi_note B4   &midi_note C5
+                &midi_note C5   &midi_note D5   &midi_note E5   &midi_note F5
+                &midi_note G5   &midi_note A5   &midi_note B5   &midi_note C6
+            >;
+        };
+
+        /* 
+         * Layer 1: Drum pads (low octave for percussion)
+         * Row 1: C1  D1  E1  F1
+         * Row 2: G1  A1  B1  C2
+         * Row 3: C2  D2  E2  F2
+         * Row 4: G2  A2  B2  C3
+         */
+        drum_layer {
+            label = "Drums";
+            bindings = <
+                &midi_note C1   &midi_note D1   &midi_note E1   &midi_note F1
+                &midi_note G1   &midi_note A1   &midi_note B1   &midi_note C2
+                &midi_note C2   &midi_note D2   &midi_note E2   &midi_note F2
+                &midi_note G2   &midi_note A2   &midi_note B2   &midi_note C3
+            >;
+        };
+
+        /* 
+         * Layer 2: Extended chromatic with sharps/flats
+         * Row 1: C#4 D#4 F#4 G#4
+         * Row 2: A#4 C#5 D#5 F#5
+         * Row 3: G#5 A#5 C#6 D#6
+         * Row 4: F#6 G#6 A#6 C#7
+         */
+        chromatic_layer {
+            label = "Chromatic";
+            bindings = <
+                &midi_note CS4  &midi_note DS4  &midi_note FS4  &midi_note GS4
+                &midi_note AS4  &midi_note CS5  &midi_note DS5  &midi_note FS5
+                &midi_note GS5  &midi_note AS5  &midi_note CS6  &midi_note DS6
+                &midi_note FS6  &midi_note GS6  &midi_note AS6  &midi_note CS7
+            >;
+        };
+    };
+};
